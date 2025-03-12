@@ -3,6 +3,8 @@ Plugin for [Autodesk Flame software](http://www.autodesk.com/products/flame).
 
 Search within a group of selected timelines to narrow down the selection.
 
+![screenshot](screenshot.png)
+
 ## Compatibility
 |Release Version|Flame Version|
 |---|---|
