@@ -3,7 +3,7 @@ Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
 Script Version: 1.1.0
-Flame Version: 2022
+Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/filter-selection
 
@@ -33,7 +33,7 @@ from functools import partial
 from typing import Optional
 
 import flame
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 TITLE = 'Filter Selection'
 VERSION_INFO = (1, 1, 0)
@@ -571,8 +571,7 @@ class FilterSelection:
         self.window.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         # Center Window
-        resolution = QtWidgets.QDesktopWidget().screenGeometry()
-
+        resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         self.window.move(
                 (resolution.width() / 2) - (self.window.frameSize().width() / 2),
                 (resolution.height() / 2) - (self.window.frameSize().height() / 2))
@@ -622,7 +621,7 @@ class FilterSelection:
         self.hbox2.addWidget(self.ok_btn)
 
         self.vbox = QtWidgets.QVBoxLayout()
-        self.vbox.setMargin(20)
+        self.vbox.setContentsMargins(20, 20, 20, 20)
         self.vbox.addLayout(self.grid)
         self.vbox.addSpacing(20)
         self.vbox.addLayout(self.hbox)
@@ -651,5 +650,5 @@ def get_media_panel_custom_ui_actions():
              'actions': [{'name': 'Filter Selection',
                           'isVisible': scope_sequence,
                           'execute': FilterSelection,
-                          'minimumVersion': '2022.0.0.0'}]
+                          'minimumVersion': '2025.0.0.0'}]
             }]
