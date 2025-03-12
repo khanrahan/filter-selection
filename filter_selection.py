@@ -2,7 +2,7 @@
 Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
-Script Version: 1.0.0
+Script Version: 1.1.0
 Flame Version: 2022
 
 URL: http://www.github.com/khanrahan/filter-selection
@@ -36,7 +36,7 @@ import flame
 from PySide2 import QtCore, QtWidgets
 
 TITLE = 'Filter Selection'
-VERSION_INFO = (1, 0, 0)
+VERSION_INFO = (1, 1, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
