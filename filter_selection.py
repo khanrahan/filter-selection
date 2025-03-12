@@ -1,6 +1,6 @@
 """
 Script Name: Filter Selection
-Written By: Kieran Hanrahan
+Written by: Kieran Hanrahan
 
 Script Version: 1.0.0
 Flame Version: 2023
