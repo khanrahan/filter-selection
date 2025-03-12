@@ -29,6 +29,7 @@ To Install:
     /opt/Autodesk/user/<user name>/python
 """
 
+from functools import partial
 from typing import Optional
 
 import flame
@@ -361,6 +362,102 @@ class FlamePushButton(QtWidgets.QPushButton):
                 border: 10px solid rgb(71, 71, 71)}""")
 
 
+class FlamePushButtonMenu(QtWidgets.QPushButton):
+    """Custom Qt Flame Menu Push Button Widget v3.1
+
+    button_name: text displayed on button [str]
+    menu_options: list of options show when button is pressed [list]
+    menu_width: (optional) width of widget. default is 150. [int]
+    max_menu_width: (optional) set maximum width of widget. default is 2000. [int]
+    menu_action: (optional) execute when button is changed. [function]
+
+    Usage:
+
+        push_button_menu_options = ['Item 1', 'Item 2', 'Item 3', 'Item 4']
+        menu_push_button = FlamePushButtonMenu(
+            'push_button_name', push_button_menu_options)
+
+        or
+
+        push_button_menu_options = ['Item 1', 'Item 2', 'Item 3', 'Item 4']
+        menu_push_button = FlamePushButtonMenu(
+            push_button_menu_options[0], push_button_menu_options)
+
+    Notes:
+        Started as v2.1
+        v3.1 adds a functionionality to set the width of the menu to be the same as the
+        button.
+    """
+
+    def __init__(self, button_name, menu_options, menu_width=240, max_menu_width=2000,
+                 menu_action=None):
+        super().__init__()
+
+        self.button_name = button_name
+        self.menu_options = menu_options
+        self.menu_action = menu_action
+
+        self.setText(button_name)
+        self.setMinimumHeight(28)
+        self.setMinimumWidth(menu_width)
+        self.setMaximumWidth(max_menu_width)  # is max necessary?
+        self.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.setStyleSheet("""
+            QPushButton {
+                color: rgb(154, 154, 154);
+                background-color: rgb(45, 55, 68);
+                border: none;
+                font: 14px "Discreet";
+                padding-left: 9px;
+                text-align: left}
+            QPushButton:disabled {
+                color: rgb(116, 116, 116);
+                background-color: rgb(45, 55, 68);
+                border: none}
+            QPushButton:hover {
+                border: 1px solid rgb(90, 90, 90)}
+            QToolTip {
+                color: rgb(170, 170, 170);
+                background-color: rgb(71, 71, 71);
+                border: 10px solid rgb(71, 71, 71)}""")
+
+        # Menu
+        def match_width():
+            """Match menu width to the parent push button width."""
+            self.pushbutton_menu.setMinimumWidth(self.size().width())
+
+        self.pushbutton_menu = QtWidgets.QMenu(self)
+        self.pushbutton_menu.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.pushbutton_menu.aboutToShow.connect(match_width)
+        self.pushbutton_menu.setStyleSheet("""
+            QMenu {
+                color: rgb(154, 154, 154);
+                background-color: rgb(45, 55, 68);
+                border: none;
+                font: 14px "Discreet"}
+            QMenu::item:selected {
+                color: rgb(217, 217, 217);
+                background-color: rgb(58, 69, 81)}""")
+
+        self.populate_menu(menu_options)
+        self.setMenu(self.pushbutton_menu)
+
+    def create_menu(self, option, menu_action):
+        """Create it!"""
+        self.setText(option)
+
+        if menu_action:
+            menu_action()
+
+    def populate_menu(self, options):
+        """Empty the menu then reassemble the options."""
+        self.pushbutton_menu.clear()
+
+        for option in options:
+            self.pushbutton_menu.addAction(
+                option, partial(self.create_menu, option, self.menu_action))
+
+
 class FilterSelection:
     """Take the selection and filter it, to create a smaller more specific selection."""
 
@@ -403,21 +500,49 @@ class FilterSelection:
             self.window.close()
             self.message('Cancelled!')
 
-        def filter_list():
-            """Updates the results list when anything is typed in the Find bar."""
+        def filter_button():
+            """Do when filter button is touched."""
+            find_updated()
+
+        def filter_mode_button():
+            """Do when filter mode button is touched."""
+            find_updated()
+
+        def filter_contains(search_term, to_be_searched):
+            """Perform a basic contains filter.
+
+            Args:
+                search_term:  A string to look for.
+                to_be_searched:  A string to search in.
+
+            Returns:
+                Bool
+            """
+            return search_term in to_be_searched
+
+        def filter_contains_not(search_term, to_be_searched):
+            """Perform a basic contains filter.
+
+            Args:
+                search_term:  A string to look for.
+                to_be_searched:  A string to search in.
+
+            Returns:
+                Bool
+            """
+            return search_term not in to_be_searched
+
+        def filter_list(filter_method):
+            """Updates the results list when anything is typed in the Find bar.
+
+            Args:
+                filter_method:  A function that returns a bool.
+            """
             for num in range(self.list_scroll.count()):
-                if self.find.text() in self.list_scroll.item(num).text():
+                if filter_method(self.find.text(), self.list_scroll.item(num).text()):
                     self.list_scroll.item(num).setHidden(False)
                 else:
                     self.list_scroll.item(num).setHidden(True)
-
-        def invert_selection(self):
-            """Self explanitory."""
-            for num in range(self.list_scroll.count()):
-                if self.list_scroll.item(num).isSelected():
-                    self.list_scoll.item(num).setSelected(False)
-                else:
-                    self.list_scroll.item(num).setSelected(True)
 
         def update_selection_list():
             """Pass selection in the PySide window back to a class attribute."""
@@ -427,7 +552,10 @@ class FilterSelection:
 
         def find_updated():
             """Execute when the Find field is updated."""
-            filter_list()
+            if self.filter_mode_btn.text() == 'Contains':
+                filter_list(filter_contains)
+            if self.filter_mode_btn.text() == 'Does Not Contain':
+                filter_list(filter_contains_not)
             update_selection_list()
 
         self.window = QtWidgets.QWidget()
@@ -463,7 +591,12 @@ class FilterSelection:
         self.list_scroll.itemDoubleClicked.connect(okay_button)
 
         # Buttons
-        self.invert_btn = FlameButton('Invert', connect=invert_selection)
+        self.filter_btn = FlamePushButtonMenu(
+                'Name', ['Name'], menu_width=170, menu_action=filter_button)
+        self.filter_mode_btn = FlamePushButtonMenu(
+                'Contains', ['Contains', 'Does Not Contain'],
+                menu_width=130,
+                menu_action=filter_mode_button)
         self.ok_btn = FlameButton('Ok', okay_button, button_color='blue')
         self.ok_btn.setAutoDefault(True)  # doesnt make Enter key work
 
@@ -474,13 +607,13 @@ class FilterSelection:
         self.grid.setHorizontalSpacing(10)
         self.grid.setVerticalSpacing(10)
 
-        self.grid.addWidget(self.find_label, 0, 0)
-        self.grid.addWidget(self.find, 0, 1)
+        self.grid.addWidget(self.filter_btn, 0, 0)
+        self.grid.addWidget(self.filter_mode_btn, 0, 1)
+        self.grid.addWidget(self.find, 0, 2)
 
         self.hbox = QtWidgets.QHBoxLayout()
         self.hbox.addStretch(1)
         self.hbox.addWidget(self.list_scroll)
-        self.hbox.addWidget(self.invert_btn)
         self.hbox.addStretch(1)
 
         self.hbox2 = QtWidgets.QHBoxLayout()
