@@ -3,7 +3,7 @@ Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
 Script Version: 1.0.0
-Flame Version: 2023
+Flame Version: 2022
 
 URL: http://www.github.com/khanrahan/filter-selection
 
@@ -519,5 +519,5 @@ def get_media_panel_custom_ui_actions():
              'actions': [{'name': 'Filter Selection',
                           'isVisible': scope_sequence,
                           'execute': FilterSelection,
-                          'minimumVersion': '2023.0.0.0'}]
+                          'minimumVersion': '2022.0.0.0'}]
             }]
