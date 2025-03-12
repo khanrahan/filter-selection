@@ -19,7 +19,6 @@ Menus:
     Right-click selected items on the Desktop -> Select... -> Filter Selection
     Right-click selected items in the Media Hub -> Select... -> Filter Selection
     Right-click selected items in the Media Panel -> Select... -> Filter Selection
-    Right-click selected items in a Timeline -> Select... -> Filter Selection
 
 To Install:
 
