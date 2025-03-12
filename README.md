@@ -3,6 +3,8 @@ Plugin for [Autodesk Flame software](http://www.autodesk.com/products/flame).
 
 Search within a group of selected timelines to narrow down the selection.
 
+![screenshot](screenshot.png)
+
 ## Compatibility
 |Release Version|Flame Version|
 |---|---|
@@ -10,6 +12,15 @@ Search within a group of selected timelines to narrow down the selection.
 |v1.X.X|Flame 2021 up to 2024.2|
 
 ## Installation
+
+### Flame 2025 and newer
+To make available to all users on the workstation, copy `apply_text_timeline_fx_to_segments.py` to `/opt/Autodesk/shared/python/`
+
+For specific users, copy `apply_text_timeline_fx_to_segments.py` to the appropriate path below...
+|Platform|Path|
+|---|---|
+|Linux|`/home/<user_name>/flame/python/`|
+|Mac|`/Users/<user_name>/Library/Preferences/Autodesk/flame/python/`|
 
 ### Flame 2021 up to 2024.2
 To make available to all users on the workstation, copy `filter_selection.py` to `/opt/Autodesk/shared/python/`

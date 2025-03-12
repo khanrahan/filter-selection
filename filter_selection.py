@@ -2,8 +2,8 @@
 Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
-Script Version: 1.1.0
-Flame Version: 2022
+Script Version: 2.0.0
+Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/filter-selection
 
@@ -23,20 +23,23 @@ Menus:
 To Install:
 
     For all users, copy this file to:
-    /opt/Autodesk/shared/python
+    /opt/Autodesk/shared/python/
 
-    For a specific user, copy this file to:
-    /opt/Autodesk/user/<user name>/python
+    For a specific user on Linux, copy this file to:
+    /home/<user_name>/flame/python/
+
+    For a specific user on Mac, copy this file to:
+    /Users/<user_name>/Library/Preferences/Autodesk/flame/python/
 """
 
 from functools import partial
 from typing import Optional
 
 import flame
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 TITLE = 'Filter Selection'
-VERSION_INFO = (1, 1, 0)
+VERSION_INFO = (2, 0, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
@@ -571,8 +574,7 @@ class FilterSelection:
         self.window.setFocusPolicy(QtCore.Qt.StrongFocus)
 
         # Center Window
-        resolution = QtWidgets.QDesktopWidget().screenGeometry()
-
+        resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         self.window.move(
                 (resolution.width() / 2) - (self.window.frameSize().width() / 2),
                 (resolution.height() / 2) - (self.window.frameSize().height() / 2))
@@ -622,7 +624,7 @@ class FilterSelection:
         self.hbox2.addWidget(self.ok_btn)
 
         self.vbox = QtWidgets.QVBoxLayout()
-        self.vbox.setMargin(20)
+        self.vbox.setContentsMargins(20, 20, 20, 20)
         self.vbox.addLayout(self.grid)
         self.vbox.addSpacing(20)
         self.vbox.addLayout(self.hbox)
@@ -651,5 +653,5 @@ def get_media_panel_custom_ui_actions():
              'actions': [{'name': 'Filter Selection',
                           'isVisible': scope_sequence,
                           'execute': FilterSelection,
-                          'minimumVersion': '2022.0.0.0'}]
+                          'minimumVersion': '2025.0.0.0'}]
             }]
