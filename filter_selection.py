@@ -601,6 +601,14 @@ class FilterSelection:
 
         self.cancel_btn = FlameButton('Cancel', cancel_button)
 
+        # Shortcuts
+        self.shortcut_enter = QtGui.QShortcut(
+                QtGui.QKeySequence('Enter'), self.ok_btn, okay_button)
+        self.shortcut_escape = QtGui.QShortcut(
+                QtGui.QKeySequence('Escape'), self.cancel_btn, self.window.close)
+        self.shortcut_return = QtGui.QShortcut(
+                QtGui.QKeySequence('Return'), self.ok_btn, okay_button)
+
         # Layout
         self.grid = QtWidgets.QGridLayout()
         self.grid.setHorizontalSpacing(10)
