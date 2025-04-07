@@ -2,13 +2,13 @@
 Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
-Script Version: 2.0.0
+Script Version: 2.1.0
 Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/filter-selection
 
 Creation Date: 03.07.25
-Update Date: 03.12.25
+Update Date: 04.07.25
 
 Description:
 
@@ -39,7 +39,7 @@ import flame
 from PySide6 import QtCore, QtGui, QtWidgets
 
 TITLE = 'Filter Selection'
-VERSION_INFO = (2, 0, 0)
+VERSION_INFO = (2, 1, 0)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
@@ -68,8 +68,8 @@ class FlameButton(QtWidgets.QPushButton):
         self.setText(button_name)
         self.setMinimumSize(QtCore.QSize(button_width, 28))
         self.setMaximumSize(QtCore.QSize(button_max_width, 28))
-        self.setFocusPolicy(QtCore.Qt.NoFocus)
         self.clicked.connect(connect)
+        self.setFocusPolicy(QtCore.Qt.NoFocus)
         if button_color == 'normal':
             self.setStyleSheet("""
                 QPushButton {
@@ -186,7 +186,7 @@ class FlameLineEdit(QtWidgets.QLineEdit):
         self.setMinimumHeight(28)
         self.setMinimumWidth(width)
         self.setMaximumWidth(max_width)
-        self.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setStyleSheet("""
             QLineEdit {
                 color: rgb(154, 154, 154);
@@ -284,81 +284,6 @@ class FlameListWidget(QtWidgets.QListWidget):
                 background: none;
                 width: 0px;
                 height: 0px}
-            QToolTip {
-                color: rgb(170, 170, 170);
-                background-color: rgb(71, 71, 71);
-                border: 10px solid rgb(71, 71, 71)}""")
-
-
-class FlamePushButton(QtWidgets.QPushButton):
-    """Custom Qt Flame Push Button Widget v2.1
-
-    button_name: text displayed on button [str]
-    button_checked: True or False [bool]
-    connect: execute when button is pressed [function]
-    button_width: (optional) default is 150. [int]
-
-    Usage:
-        pushbutton = FlamePushButton('Button Name', False)
-    """
-    def __init__(self, button_name, button_checked, connect=None, button_width=150):
-        super().__init__()
-
-        self.setText(button_name)
-        self.setCheckable(True)
-        self.setChecked(button_checked)
-        self.setMinimumSize(button_width, 28)
-        self.setMaximumSize(button_width, 28)
-        self.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.clicked.connect(connect)
-        self.setStyleSheet("""
-            QPushButton {
-                color: rgb(154, 154, 154);
-                background-color: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(58, 58, 58),
-                    stop: .94 rgb(44, 54, 68));
-                text-align: left;
-                border-top: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(58, 58, 58),
-                    stop: .94 rgb(44, 54, 68));
-                border-bottom: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(58, 58, 58),
-                    stop: .94 rgb(44, 54, 68));
-                border-left: 1px solid rgb(58, 58, 58);
-                border-right: 1px solid rgb(44, 54, 68);
-                padding-left: 5px; font: 14px 'Discreet'}
-            QPushButton:checked {
-                color: rgb(217, 217, 217);
-                background-color: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(71, 71, 71),
-                    stop: .94 rgb(50, 101, 173));
-                text-align: left;
-                border-top: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(71, 71, 71),
-                    stop: .94 rgb(50, 101, 173));
-                border-bottom: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(71, 71, 71),
-                    stop: .94 rgb(50, 101, 173));
-                border-left: 1px solid rgb(71, 71, 71);
-                border-right: 1px solid rgb(50, 101, 173);
-                padding-left: 5px;
-                font: italic}
-            QPushButton:hover {
-                border: 1px solid rgb(90, 90, 90)}
-            QPushButton:disabled {
-                color: #6a6a6a;
-                background-color: qlineargradient(
-                    x1: 0, y1: 0, x2: 1, y2: 0,
-                    stop: .93 rgb(58, 58, 58),
-                    stop: .94 rgb(50, 50, 50));
-                font: light;
-                border: none}
             QToolTip {
                 color: rgb(170, 170, 170);
                 background-color: rgb(71, 71, 71);
@@ -570,9 +495,6 @@ class FilterSelection:
         # Mac needs this to close the window
         self.window.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
-        # FlameLineEdit class needs this
-        self.window.setFocusPolicy(QtCore.Qt.StrongFocus)
-
         # Center Window
         resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         self.window.move(
@@ -604,6 +526,14 @@ class FilterSelection:
 
         self.cancel_btn = FlameButton('Cancel', cancel_button)
 
+        # Shortcuts
+        self.shortcut_enter = QtGui.QShortcut(
+                QtGui.QKeySequence('Enter'), self.ok_btn, okay_button)
+        self.shortcut_escape = QtGui.QShortcut(
+                QtGui.QKeySequence('Escape'), self.cancel_btn, self.window.close)
+        self.shortcut_return = QtGui.QShortcut(
+                QtGui.QKeySequence('Return'), self.ok_btn, okay_button)
+
         # Layout
         self.grid = QtWidgets.QGridLayout()
         self.grid.setHorizontalSpacing(10)
@@ -632,6 +562,9 @@ class FilterSelection:
         self.vbox.addLayout(self.hbox2)
 
         self.window.setLayout(self.vbox)
+
+        # Inital Focus
+        self.find.setFocus()
 
         self.window.show()
         return self.window
