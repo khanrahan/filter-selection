@@ -68,8 +68,8 @@ class FlameButton(QtWidgets.QPushButton):
         self.setText(button_name)
         self.setMinimumSize(QtCore.QSize(button_width, 28))
         self.setMaximumSize(QtCore.QSize(button_max_width, 28))
-        self.setFocusPolicy(QtCore.Qt.NoFocus)
         self.clicked.connect(connect)
+        self.setFocusPolicy(QtCore.Qt.NoFocus)
         if button_color == 'normal':
             self.setStyleSheet("""
                 QPushButton {
@@ -186,7 +186,7 @@ class FlameLineEdit(QtWidgets.QLineEdit):
         self.setMinimumHeight(28)
         self.setMinimumWidth(width)
         self.setMaximumWidth(max_width)
-        self.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.setStyleSheet("""
             QLineEdit {
                 color: rgb(154, 154, 154);
@@ -570,9 +570,6 @@ class FilterSelection:
         # Mac needs this to close the window
         self.window.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
-        # FlameLineEdit class needs this
-        self.window.setFocusPolicy(QtCore.Qt.StrongFocus)
-
         # Center Window
         resolution = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         self.window.move(
@@ -632,6 +629,9 @@ class FilterSelection:
         self.vbox.addLayout(self.hbox2)
 
         self.window.setLayout(self.vbox)
+
+        # Inital Focus
+        self.find.setFocus()
 
         self.window.show()
         return self.window
