@@ -2,13 +2,13 @@
 Script Name: Filter Selection
 Written by: Kieran Hanrahan
 
-Script Version: 2.1.0
+Script Version: 2.1.1
 Flame Version: 2025
 
 URL: http://www.github.com/khanrahan/filter-selection
 
 Creation Date: 03.07.25
-Update Date: 04.07.25
+Update Date: 04.10.25
 
 Description:
 
@@ -39,7 +39,7 @@ import flame
 from PySide6 import QtCore, QtGui, QtWidgets
 
 TITLE = 'Filter Selection'
-VERSION_INFO = (2, 1, 0)
+VERSION_INFO = (2, 1, 1)
 VERSION = '.'.join([str(num) for num in VERSION_INFO])
 TITLE_VERSION = f'{TITLE} v{VERSION}'
 MESSAGE_PREFIX = '[PYTHON]'
@@ -530,7 +530,7 @@ class FilterSelection:
         self.shortcut_enter = QtGui.QShortcut(
                 QtGui.QKeySequence('Enter'), self.ok_btn, okay_button)
         self.shortcut_escape = QtGui.QShortcut(
-                QtGui.QKeySequence('Escape'), self.cancel_btn, self.window.close)
+                QtGui.QKeySequence('Escape'), self.cancel_btn, cancel_button)
         self.shortcut_return = QtGui.QShortcut(
                 QtGui.QKeySequence('Return'), self.ok_btn, okay_button)
 
