@@ -530,7 +530,7 @@ class FilterSelection:
         self.shortcut_enter = QtGui.QShortcut(
                 QtGui.QKeySequence('Enter'), self.ok_btn, okay_button)
         self.shortcut_escape = QtGui.QShortcut(
-                QtGui.QKeySequence('Escape'), self.cancel_btn, self.window.close)
+                QtGui.QKeySequence('Escape'), self.cancel_btn, cancel_button)
         self.shortcut_return = QtGui.QShortcut(
                 QtGui.QKeySequence('Return'), self.ok_btn, okay_button)
 
